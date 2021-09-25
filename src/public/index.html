@@ -34,6 +34,14 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    function oneDimtoTwoDim(grid) {
+      let tempArr = [];
+
+      while (grid.length) tempArr.push(grid.splice(0, 4));
+
+      return tempArr;
+    }
+
     function getGrid() {
       let grid = [];
       let gridElm = document.getElementById("grid");
@@ -41,8 +49,6 @@
       gridElm = [...gridElm.children].map((item) =>
         item.innerText ? parseInt(item.innerText) : 0
       );
-
-      while (gridElm.length) grid.push(gridElm.splice(0, 4));
 
       return grid;
     }
@@ -82,8 +88,10 @@
       return max;
     }
 
-    let numGrid = getGrid();
+    let oneGrid = getGrid();
+    let twoGrid = oneDimtoTwoDim(oneGrid);
     let connected = false;
+
     const socket = io("http://localhost:8080");
 
     window.addEventListener("keydown", (event) => {
@@ -93,8 +101,8 @@
     window.addEventListener("load", (event) => {
       event.preventDefault();
 
-      placeNum(numGrid);
-      placeNum(numGrid);
+      placeNum(twoGrid);
+      placeNum(twoGrid);
 
       socket.emit("hello", { id: 16 });
     });
