@@ -11,7 +11,7 @@
   <body>
     <div class="grid" id="grid">
       <div></div>
-      <div></div>
+      <div>2048</div>
       <div></div>
       <div></div>
 
@@ -62,9 +62,24 @@
         validSpots[Math.floor(Math.random() * validSpots.length)];
 
       let elm = document.getElementById("grid").children[row * 4 + col];
+      let num = Math.random() > 0.5 ? 2 : 4;
 
-      elm.innerText = Math.random() > 0.5 ? 2 : 4;
-      elm.classList.add("colored");
+      elm.innerHTML = num;
+      elm.classList.add("n" + num);
+    }
+
+    function getMax(grid) {
+      let max = 0;
+
+      for (let row of grid) {
+        for (let num of row) {
+          if (num > max) {
+            max = num;
+          }
+        }
+      }
+
+      return max;
     }
 
     let numGrid = getGrid();

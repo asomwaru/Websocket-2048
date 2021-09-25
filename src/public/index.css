@@ -18,10 +18,6 @@ body {
     background-color: #faf8ef;
 }
 
-.colored {
-    background-color: #faf8ef !important;
-}
-
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -40,10 +36,65 @@ body {
     align-items: center;
     justify-content: center;
 
+    font-size: large;
     margin: 10px;
 
     border-radius: 5px;
 
     background-color: #CDC1B4;
     padding: clamp(0.5em, 1em, 2em);
+}
+
+
+.n2 {
+    background-color: #faf8ef !important;
+}
+
+.n4 {
+    background-color: #EDE0C8 !important;
+}
+
+.n8 {
+    color: white;
+    background-color: #F2B179 !important;
+}
+
+.n16 {
+    color: white;
+    background-color: #F59563 !important;
+}
+
+.n32 {
+    color: white;
+    background-color: #F67C5F !important;
+}
+
+.n64 {
+    color: white;
+    background-color: #F65E3B !important;
+}
+
+.n128 {
+    color: white;
+    background-color: #EDCF72 !important;
+}
+
+.n256 {
+    color: white;
+    background-color: #EDCC61 !important;
+}
+
+.n512 {
+    color: white;
+    background-color: #F67C5F !important;
+}
+
+.n1024 {
+    color: white;
+    background-color: #F67C5F !important;
+}
+
+.n2048 {
+    color: white;
+    background-color: #F67C5F !important;
 }
