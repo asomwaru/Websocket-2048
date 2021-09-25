@@ -11,21 +11,19 @@ const app = express();
 const server = new Server(app);
 const io = new ioserver(server);
 
-let root = path.join(__dirname, 'public');
+let root = path.join(__dirname, "public");
 app.use("/static", express.static(root));
 
-app.get('/', (req, res) => {
-    res.sendFile(root + "/index.html")
+app.get("/", (_, res) => {
+  res.sendFile(root + "/index.html");
 });
-
 
 io.sockets.on("connection", (socket) => {
-    socket.on("hello", ({ id }) => {
-        console.log("Got an id of " + `${id}`);
-    })
+  socket.on("hello", ({ id }) => {
+    // console.log("Got an id of " + `${id}`);
+  });
 });
 
-
 server.listen(port, () => {
-    console.log(`Server has started on ${port}`);
+  console.log(`Server has started on ${port}`);
 });

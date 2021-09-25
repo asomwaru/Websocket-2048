@@ -4,18 +4,78 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/index.css" />
     <title>Competitive 2048</title>
   </head>
 
   <body>
-    <h1>Hello!</h1>
+    <div class="grid" id="grid">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    function getGrid() {
+      let grid = [];
+      let gridElm = document.getElementById("grid");
+
+      gridElm = [...gridElm.children].map((item) =>
+        item.innerText ? parseInt(item.innerText) : 0
+      );
+
+      while (gridElm.length) grid.push(gridElm.splice(0, 4));
+
+      return grid;
+    }
+
+    function placeNum(grid) {
+      let validSpots = [];
+
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if (grid[i][j] === 0) {
+            validSpots.push([i, j]);
+          }
+        }
+      }
+
+      let [row, col] =
+        validSpots[Math.floor(Math.random() * validSpots.length)];
+
+      let elm = document.getElementById("grid").children[row * 4 + col];
+
+      elm.innerText = Math.random() > 0.5 ? 2 : 4;
+      elm.classList.add("colored");
+    }
+
+    let numGrid = getGrid();
     const socket = io("http://localhost:8080");
 
     window.addEventListener("load", (event) => {
+      event.preventDefault();
+
+      placeNum(numGrid);
+      placeNum(numGrid);
+
       socket.emit("hello", { id: 16 });
     });
   </script>
