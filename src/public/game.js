@@ -113,18 +113,16 @@ function shiftUp(grid)
   }
 }
 
-function combineCol(grid)
+
+function combineColumn(grid)
 {
-  function combineRow(grid)
+  for (let i = 0; i < 12; i++)
   {
-    for (let i = 0; i < 12; i++)
+    if (grid[i] == grid[i + 4])
     {
-      if (grid[i] == grid[i + 4])
-      {
-        let combinedTotal = grid[i] + grid[i + 4]
-        grid[i] = combinedTotal
-        grid[i + 4] = 0
-      }
+      let combinedTotal = grid[i] + grid[i + 4]
+      grid[i] = combinedTotal
+      grid[i + 4] = 0
     }
   }
 }
