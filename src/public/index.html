@@ -33,6 +33,7 @@
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/game.js"></script>
   <script>
     function oneDimtoTwoDim(grid) {
       let tempArr = [];
@@ -43,14 +44,11 @@
     }
 
     function getGrid() {
-      let grid = [];
       let gridElm = document.getElementById("grid");
 
-      gridElm = [...gridElm.children].map((item) =>
+      return [...gridElm.children].map((item) =>
         item.innerText ? parseInt(item.innerText) : 0
       );
-
-      return grid;
     }
 
     function placeNum(grid) {
@@ -75,24 +73,18 @@
     }
 
     function getMax(grid) {
-      let max = 0;
-
-      for (let row of grid) {
-        for (let num of row) {
-          if (num > max) {
-            max = num;
-          }
-        }
-      }
-
-      return max;
+      return Math.max(...grid);
     }
 
     let oneGrid = getGrid();
-    let twoGrid = oneDimtoTwoDim(oneGrid);
+    let twoGrid = oneDimtoTwoDim([].concat(oneGrid));
     let connected = false;
 
     const socket = io("http://localhost:8080");
+
+    socket.on("hello", () => {
+      console.log("Got a message");
+    });
 
     window.addEventListener("keydown", (event) => {
       event.preventDefault();
@@ -104,7 +96,7 @@
       placeNum(twoGrid);
       placeNum(twoGrid);
 
-      socket.emit("hello", { id: 16 });
+      socket.emit("waiting");
     });
   </script>
 </html>

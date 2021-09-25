@@ -19,8 +19,38 @@ app.get("/", (_, res) => {
 });
 
 io.sockets.on("connection", (socket) => {
-  socket.on("hello", ({ id }) => {
-    // console.log("Got an id of " + `${id}`);
+  socket.on("waiting", async () => {
+    socket.join("waiting");
+
+    let people = await io.in("waiting").allSockets();
+
+    if (people.size >= 2) {
+      let opponent: any = [...people.values()][
+        Math.floor(Math.random() * people.size)
+      ];
+
+      try {
+        opponent = io.sockets.sockets.get(opponent);
+
+        if (!opponent) {
+          throw Error("bad opponent socket");
+        }
+
+        opponent.join("room");
+        socket.join("room");
+
+        opponent.leave("room");
+        socket.leave("room");
+
+        io.in("room").emit("hello", "world");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+
+  socket.on("joined", () => {
+    console.log("Someone has joined");
   });
 });
 
