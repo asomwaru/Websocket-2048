@@ -83,7 +83,12 @@
     }
 
     let numGrid = getGrid();
+    let connected = false;
     const socket = io("http://localhost:8080");
+
+    window.addEventListener("keydown", (event) => {
+      event.preventDefault();
+    });
 
     window.addEventListener("load", (event) => {
       event.preventDefault();
