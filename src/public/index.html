@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Competitive 2048</title>
-</head>
+  </head>
 
-<script src="/socket.io/socket.io.js"></script>
-
-<body>
+  <body>
     <h1>Hello!</h1>
-</body>
+  </body>
 
-<script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
     const socket = io("http://localhost:8080");
 
-
-    window.addEventListener('load', (event) => {
-        socket.emit("hello", { id: 16}); 
+    window.addEventListener("load", (event) => {
+      socket.emit("hello", { id: 16 });
     });
-</script>
+  </script>
 </html>
