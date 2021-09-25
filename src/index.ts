@@ -20,8 +20,11 @@ app.get('/', (req, res) => {
 
 
 io.sockets.on("connection", (socket) => {
-    socket.join("waiting");
+    socket.on("hello", ({ id }) => {
+        console.log("Got an id of " + `${id}`);
+    })
 });
+
 
 server.listen(port, () => {
     console.log(`Server has started on ${port}`);

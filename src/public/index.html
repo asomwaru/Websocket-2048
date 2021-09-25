@@ -6,7 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Competitive 2048</title>
 </head>
+
+<script src="/socket.io/socket.io.js"></script>
+
 <body>
     <h1>Hello!</h1>
 </body>
+
+<script>
+    const socket = io("http://localhost:8080");
+
+
+    window.addEventListener('load', (event) => {
+        socket.emit("hello", { id: 16}); 
+    });
+</script>
 </html>
