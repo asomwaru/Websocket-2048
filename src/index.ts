@@ -42,6 +42,11 @@ io.on("connection", (socket) => {
         throw Error("bad opponent socket");
       }
 
+      // room = Array(6)
+      //   .fill(0)
+      //   .map(() => Math.floor(Math.random() * 10))
+      //   .join("");
+
       opponent.join(room);
       socket.join(room);
 
@@ -50,10 +55,11 @@ io.on("connection", (socket) => {
 
       // generate a room id
 
-      io.in("room").emit("hello");
+      io.in("room").emit("hello", "world");
 
       console.log("Send id to opponent");
       io.to(oppClient).emit("give_id", { num: 1 });
+      socket.emit("give_id", { num: 0 });
     }
   });
 
@@ -63,6 +69,13 @@ io.on("connection", (socket) => {
 
   socket.on("receive", async (args: receiveUpdate) => {
     socket.broadcast.to(room).emit("update", { opponent: args.board, ...args });
+  });
+
+  socket.on("gameover", async ({ id }) => {
+    console.log("we got a winner");
+    console.log(`winner is ${id}\n`);
+
+    socket.broadcast.to(room).emit("winner", { winner: id });
   });
 });
 

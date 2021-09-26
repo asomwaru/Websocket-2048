@@ -10,26 +10,72 @@
   </head>
 
   <body>
-    <div class="grid" id="grid">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <section id="info">
+      <h1>2048 Multiplayer game!</h1>
 
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <article>
+        <p>
+          This is a regular 2048 get except that you are competing against
+          someone to get to 2048 first!
+        </p>
 
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+        <p>
+          This uses vanilla Javascript, CSS, HTML, and the Socket.io library to
+          data across!
+        </p>
+      </article>
 
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <button type="submit" id="start">Click to join a room</button>
+    </section>
+
+    <div class="container">
+      <div class="grid-container">
+        <h3 id="connection">Connection: none</h3>
+
+        <div class="grid" id="grid">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="enemy-grid" id="enemy">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   </body>
 
@@ -97,6 +143,34 @@
       });
     }
 
+    function updateEnemy(grid) {
+      grid = grid.flat();
+      let enemy = document.getElementById("enemy");
+
+      for (let i = 0; i < grid.length; i++) {
+        let num = grid[i];
+
+        if (num !== 0) {
+          enemy.children[i].innerHTML = num;
+          enemy.children[i].className = `n${num}`;
+        } else {
+          enemy.children[i].innerHTML = "";
+          enemy.children[i].className = "";
+        }
+      }
+    }
+
+    function stopPlaying(conn, win) {
+      conn = false;
+
+      if (!win) {
+        document.getElementById("connection").innerHTML =
+          "You lost! Better luck next time!";
+      } else {
+        ("You won! Congrats");
+      }
+    }
+
     let oneGrid = getGrid();
     let twoGrid = oneDimtoTwoDim(oneGrid);
     let connected = false;
@@ -105,7 +179,10 @@
     const socket = io("http://localhost:8080");
 
     socket.on("hello", () => {
+      document.getElementById("connection").innerHTML = `Connection:good`;
+
       console.log("Got a message");
+      socket.emit("receive", { id, board: twoGrid });
     });
 
     socket.on("give_id", ({ num }) => {
@@ -116,27 +193,54 @@
 
     socket.on("update", (args) => {
       if (args.id !== id) {
-        console.table(args.opponent);
+        updateEnemy(args.opponent);
       }
     });
 
+    socket.on("winner", (args) => {
+      if (id === args.winner) {
+        document.getElementById("connection").innerHTML = "You won! Congrats";
+      } else {
+        document.getElementById("connection").innerHTML =
+          "You lost! Better luck next time!";
+      }
+    });
+
+    document.getElementById("start").addEventListener("click", (event) => {
+      event.preventDefault();
+
+      connected = true;
+      twoGrid.map((item) => [0, 0, 0, 0]);
+
+      updateEnemy(
+        Array(4)
+          .fill(0)
+          .map((item) => Array(4).fill(0))
+      );
+      updatePage(twoGrid);
+
+      placeNum(twoGrid);
+      placeNum(twoGrid);
+
+      socket.emit("waiting");
+    });
+
     window.addEventListener("keydown", (event) => {
-      /*
-      left: 37
-      right: 39
-      up: 38
-      down: 40
-      */
+      if (!connected) {
+        return;
+      }
 
       let checkedMove;
 
       if (event.keyCode === 37) {
         oneGrid = getGrid();
         twoGrid = oneDimtoTwoDim(oneGrid);
-        if (!board.movesLeft(twoGrid))
-        {
-          console.log("No moves are left");
+
+        if (!board.movesLeft(twoGrid)) {
+          socket.emit("gameover", { id: id ? 0 : id });
+          stopPlaying(connected, false);
         }
+
         checkedMove = board.checkLeft(oneGrid);
 
         if (checkedMove) {
@@ -154,6 +258,11 @@
         oneGrid = getGrid();
         checkedMove = board.checkRight(oneGrid);
 
+        if (!board.movesLeft(twoGrid)) {
+          socket.emit("gameover", { id: id ? 0 : id });
+          stopPlaying(connected, false);
+        }
+
         if (checkedMove) {
           oneGrid = checkedMove;
 
@@ -168,6 +277,11 @@
       if (event.keyCode === 38) {
         oneGrid = getGrid();
         checkedMove = board.checkUp(oneGrid);
+
+        if (!board.movesLeft(twoGrid)) {
+          socket.emit("gameover", { id: id ? 0 : id });
+          stopPlaying(connected, false);
+        }
 
         if (checkedMove) {
           oneGrid = checkedMove;
@@ -184,6 +298,11 @@
         oneGrid = getGrid();
         checkedMove = board.checkDown(oneGrid);
 
+        if (!board.movesLeft(twoGrid)) {
+          socket.emit("gameover", { id: id ? 0 : id });
+          stopPlaying(connected, false);
+        }
+
         if (checkedMove) {
           oneGrid = checkedMove;
 
@@ -194,18 +313,15 @@
           socket.emit("receive", { id, board: twoGrid });
         }
       }
+
+      if (oneGrid.includes(2048)) {
+        socket.emit("gameover", { id });
+        stopPlaying(connected, true);
+      }
     });
 
     window.addEventListener("load", (event) => {
       event.preventDefault();
-
-      placeNum(twoGrid);
-      placeNum(twoGrid);
-
-      oneGrid = getGrid();
-      twoGrid = oneDimtoTwoDim(oneGrid);
-
-      socket.emit("waiting");
     });
   </script>
 </html>
