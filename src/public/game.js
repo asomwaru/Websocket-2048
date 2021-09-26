@@ -44,13 +44,21 @@ export function shiftLeft(grid) {
   }
 }
 
-export function combineRow(grid) {
+export function combineRow(grid, direction) {
   for (let i = 0; i < 15; i++) {
     if (i != 3 && i != 7 && i != 11) {
       if (grid[i] == grid[i + 1]) {
         let combinedTotal = grid[i] + grid[i + 1];
-        grid[i] = combinedTotal;
-        grid[i + 1] = 0;
+        if (direction == 1)
+        {
+          grid[i] = combinedTotal;
+          grid[i + 1] = 0;
+        }
+        if (direction == 2)
+        {
+          grid[i] = 0;
+          grid[i + 1] = combinedTotal;
+        }
       }
     }
   }
@@ -98,12 +106,20 @@ export function shiftUp(grid) {
   }
 }
 
-export function combineColumn(grid) {
+export function combineColumn(grid, direction) {
   for (let i = 0; i < 12; i++) {
     if (grid[i] == grid[i + 4]) {
       let combinedTotal = grid[i] + grid[i + 4];
-      grid[i] = combinedTotal;
-      grid[i + 4] = 0;
+      if (direction == 1)
+      {
+        grid[i] = combinedTotal;
+        grid[i + 4] = 0;
+      }
+      if (direction == 2)
+      {
+        grid[i] = 0;
+        grid[i + 4] = combinedTotal;
+      }
     }
   }
 }
