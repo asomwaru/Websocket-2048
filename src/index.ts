@@ -42,9 +42,9 @@ io.on("connection", (socket) => {
         throw Error("bad opponent socket");
       }
 
-      room = Array.apply(null, Array(5))
-        .map(() => Math.floor(Math.random() * 10))
-        .join("");
+      // room = Array.apply(null, Array(5))
+      //   .map(() => Math.floor(Math.random() * 10))
+      //   .join("");
 
       opponent.join(room);
       socket.join(room);
