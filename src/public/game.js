@@ -125,37 +125,35 @@ export function combineColumn(grid, direction) {
 
 //Checks if moves are still available
 export function movesLeft(grid) {
+  let currentSet = new Set();
 
-  let currentHoriSet = new Set();
-  let currentVertSet = new Set();
+  let columns = [];
 
-  for (let i = 0; i < 4; i++)
-  {
-    for (let j = 0; j < 4; j++)
-    {
-      currentHoriSet.add(grid[i][j]);
-      currentVertSet.add(grid[j][i]);
-    }
-    if (currentHoriSet.length < 4)
-    {
-      return true;
-    }
-    if (currentVertSet.length < 4)
-    {
-      return true;
-    }
-    for(let j = 0; j < 3; j++)
-    {
-      if (grid[i][j] == grid[i][j + 1])
-      {
-        return true;
-      }
-      if (grid[j][i] == grid[j + 1][i])
-      {
-        return true;
-      }
-    }
+  const arrayColumn = (arr, n) => arr.map((x) => x[n]);
+
+  for (let i = 0; i < 4; i++) {
+    columns.push(arrayColumn(grid, i));
   }
+
+  grid.forEach((item) => {
+    if (item.includes(0)) {
+      return true;
+    }
+  });
+
+  [...grid, ...columns].forEach((item) => {
+    currentSet.add(...item);
+
+    if (currentSet.size !== 4) {
+      for (let i = 0; i < 3; i++) {
+        if (item[i] === item[i + 1]) {
+          return true;
+        }
+      }
+    }
+
+    currentSet.clear();
+  });
 
   /*
   for (let i = 0; i < 4; i++)
@@ -186,7 +184,6 @@ export function movesLeft(grid) {
   */
 
   return false;
-
 }
 
 export function checkRight(grid) {

@@ -42,15 +42,17 @@ io.on("connection", (socket) => {
         throw Error("bad opponent socket");
       }
 
+      room = Array.apply(null, Array(5))
+        .map(() => Math.floor(Math.random() * 10))
+        .join("");
+
       opponent.join(room);
       socket.join(room);
 
       opponent.leave("waiting");
       socket.leave("waiting");
 
-      // generate a room id
-
-      io.in("room").emit("hello");
+      io.in(room).emit("hello", { room });
 
       console.log("Send id to opponent");
       io.to(oppClient).emit("give_id", { num: 1 });
