@@ -70,8 +70,6 @@
       let [row, col] =
         validSpots[Math.floor(Math.random() * validSpots.length)];
 
-      console.log(row, col, grid[row][col]);
-
       let elm = document.getElementById("grid").children[row * 4 + col];
       let num = Math.random() > 0.75 ? 2 : 4;
 

@@ -49,13 +49,13 @@ export function combineRow(grid, direction) {
     if (i != 3 && i != 7 && i != 11) {
       if (grid[i] == grid[i + 1]) {
         let combinedTotal = grid[i] + grid[i + 1];
-        if (direction == 1)
-        {
+
+        if (direction == 1) {
           grid[i] = combinedTotal;
           grid[i + 1] = 0;
         }
-        if (direction == 2)
-        {
+
+        if (direction == 2) {
           grid[i] = 0;
           grid[i + 1] = combinedTotal;
           i += 1;
@@ -111,13 +111,11 @@ export function combineColumn(grid, direction) {
   for (let i = 0; i < 12; i++) {
     if (grid[i] == grid[i + 4]) {
       let combinedTotal = grid[i] + grid[i + 4];
-      if (direction == 1)
-      {
+      if (direction == 1) {
         grid[i] = combinedTotal;
         grid[i + 4] = 0;
       }
-      if (direction == 2)
-      {
+      if (direction == 2) {
         grid[i] = 0;
         grid[i + 4] = combinedTotal;
       }

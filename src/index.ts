@@ -25,7 +25,7 @@ io.sockets.on("connection", (socket) => {
     let people = await io.in("waiting").allSockets();
 
     if (people.size >= 2) {
-      let oppClient: any = [...people.values()][
+      let oppClient: string = [...people.values()][
         Math.floor(Math.random() * people.size)
       ];
 
@@ -44,6 +44,7 @@ io.sockets.on("connection", (socket) => {
       // generate a room id
 
       io.in("room").emit("hello", "world");
+      io.to(oppClient).emit("ping");
     }
   });
 
