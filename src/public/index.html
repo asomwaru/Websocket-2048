@@ -5,13 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/index.css" />
+    <script type="module" src="/static/game.js"></script>
     <title>Competitive 2048</title>
   </head>
 
   <body>
     <div class="grid" id="grid">
       <div></div>
-      <div>2048</div>
+      <div></div>
       <div></div>
       <div></div>
 
@@ -33,10 +34,12 @@
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="/static/game.js"></script>
-  <script>
+  <script type="module">
+    import * as board from "/static/game.js";
+
     function oneDimtoTwoDim(grid) {
       let tempArr = [];
+      grid = [].concat(grid);
 
       while (grid.length) tempArr.push(grid.splice(0, 4));
 
@@ -70,14 +73,30 @@
 
       elm.innerHTML = num;
       elm.classList.add("n" + num);
+      grid[row][col] = num;
     }
 
     function getMax(grid) {
       return Math.max(...grid);
     }
 
+    function updatePage(grid) {
+      let tempArr = grid.flat();
+
+      let board = document.getElementById("grid");
+      tempArr.map((item, i) => {
+        if (item !== 0) {
+          board.children[i].innerHTML = item;
+          board.children[i].className = `n${item}`;
+        } else {
+          board.children[i].innerHTML = "";
+          board.children[i].className = "";
+        }
+      });
+    }
+
     let oneGrid = getGrid();
-    let twoGrid = oneDimtoTwoDim([].concat(oneGrid));
+    let twoGrid = oneDimtoTwoDim(oneGrid);
     let connected = false;
 
     const socket = io("http://localhost:8080");
@@ -87,8 +106,6 @@
     });
 
     window.addEventListener("keydown", (event) => {
-      event.preventDefault();
-
       /*
       left: 37
       right: 39
@@ -96,38 +113,52 @@
       down: 40
       */
 
-      Console.log(event.keycode);
+      if (event.keyCode === 37) {
+        board.shiftLeft(oneGrid);
+        board.combineRow(oneGrid);
+        board.shiftLeft(oneGrid);
 
-      if (event.keycode === 37)
-      {
-        shiftLeft(oneGrid);
-        combineRow(oneGrid);
-        shiftLeft(oneGrid);
+        twoGrid = oneDimtoTwoDim(oneGrid);
         placeNum(twoGrid);
+        oneGrid = getGrid();
+
+        updatePage(twoGrid);
       }
 
-      if (event.keycode === 39)
-      {
-        shiftRight(oneGrid);
-        combineRow(oneGrid);
-        shiftRight(oneGrid);
+      if (event.keyCode === 39) {
+        board.shiftRight(oneGrid);
+        board.combineRow(oneGrid);
+        board.shiftRight(oneGrid);
+
+        twoGrid = oneDimtoTwoDim(oneGrid);
         placeNum(twoGrid);
+        oneGrid = getGrid();
+
+        updatePage(twoGrid);
       }
 
-      if (event.keycode === 38)
-      {
-        shiftUp(oneGrid);
-        combineColumn(oneGrid);
-        shiftUp(oneGrid);
+      if (event.keyCode === 38) {
+        board.shiftUp(oneGrid);
+        board.combineColumn(oneGrid);
+        board.shiftUp(oneGrid);
+
+        twoGrid = oneDimtoTwoDim(oneGrid);
         placeNum(twoGrid);
+        oneGrid = getGrid();
+
+        updatePage(twoGrid);
       }
 
-      if (event.keycode === 40)
-      {
-        shiftDown(oneGrid);
-        combineColumn(oneGrid);
-        shiftDown(oneGrid);
+      if (event.keyCode === 40) {
+        board.shiftDown(oneGrid);
+        board.combineColumn(oneGrid);
+        board.shiftDown(oneGrid);
+
+        twoGrid = oneDimtoTwoDim(oneGrid);
         placeNum(twoGrid);
+        oneGrid = getGrid();
+
+        updatePage(twoGrid);
       }
     });
 
@@ -136,6 +167,9 @@
 
       placeNum(twoGrid);
       placeNum(twoGrid);
+
+      oneGrid = getGrid();
+      twoGrid = oneDimtoTwoDim(oneGrid);
 
       socket.emit("waiting");
     });
