@@ -58,6 +58,7 @@ export function combineRow(grid, direction) {
         {
           grid[i] = 0;
           grid[i + 1] = combinedTotal;
+          i += 1;
         }
       }
     }
