@@ -25,27 +25,25 @@ io.sockets.on("connection", (socket) => {
     let people = await io.in("waiting").allSockets();
 
     if (people.size >= 2) {
-      let opponent: any = [...people.values()][
+      let oppClient: any = [...people.values()][
         Math.floor(Math.random() * people.size)
       ];
 
-      try {
-        opponent = io.sockets.sockets.get(opponent);
+      let opponent = io.sockets.sockets.get(oppClient);
 
-        if (!opponent) {
-          throw Error("bad opponent socket");
-        }
-
-        opponent.join("room");
-        socket.join("room");
-
-        opponent.leave("room");
-        socket.leave("room");
-
-        io.in("room").emit("hello", "world");
-      } catch (err) {
-        console.error(err);
+      if (!opponent) {
+        throw Error("bad opponent socket");
       }
+
+      opponent.join("room");
+      socket.join("room");
+
+      opponent.leave("waiting");
+      socket.leave("waiting");
+
+      // generate a room id
+
+      io.in("room").emit("hello", "world");
     }
   });
 
