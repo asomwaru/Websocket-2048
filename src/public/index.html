@@ -88,6 +88,47 @@
 
     window.addEventListener("keydown", (event) => {
       event.preventDefault();
+
+      /*
+      left: 37
+      right: 39
+      up: 38
+      down: 40
+      */
+
+      Console.log(event.keycode);
+
+      if (event.keycode === 37)
+      {
+        shiftLeft(oneGrid);
+        combineRow(oneGrid);
+        shiftLeft(oneGrid);
+        placeNum(twoGrid);
+      }
+
+      if (event.keycode === 39)
+      {
+        shiftRight(oneGrid);
+        combineRow(oneGrid);
+        shiftRight(oneGrid);
+        placeNum(twoGrid);
+      }
+
+      if (event.keycode === 38)
+      {
+        shiftUp(oneGrid);
+        combineColumn(oneGrid);
+        shiftUp(oneGrid);
+        placeNum(twoGrid);
+      }
+
+      if (event.keycode === 40)
+      {
+        shiftDown(oneGrid);
+        combineColumn(oneGrid);
+        shiftDown(oneGrid);
+        placeNum(twoGrid);
+      }
     });
 
     window.addEventListener("load", (event) => {

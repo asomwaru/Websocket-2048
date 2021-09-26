@@ -126,3 +126,93 @@ function combineColumn(grid)
     }
   }
 }
+
+//Checks if moves are still available
+function movesLeft(grid)
+{
+  if (checkRight(grid) || checkLeft(grid) || checkUp(grid) || checkDown(grid))
+  {
+    return true
+  }
+  return false
+}
+
+function checkRight(grid)
+{
+  let tempGrid = []
+  let testGrid = tempGrid.concat(grid)
+
+  shiftRight(testGrid)
+  combineRow(testGrid)
+  shiftRight(testGrid)
+
+  for (let i = 0; i < 15; i++)
+  {
+    if (grid[i] != testGrid[i])
+    {
+      return false
+    }
+  }
+
+  return true
+}
+
+function checkLeft(grid)
+{
+  let tempGrid = []
+  let testGrid = tempGrid.concat(grid)
+
+  shiftLeft(testGrid)
+  combineRow(testGrid)
+  shiftLeft(testGrid)
+
+  for (let i = 0; i < 15; i++)
+  {
+    if (grid[i] != testGrid[i])
+    {
+      return false
+    }
+  }
+
+  return true
+}
+
+function checkUp(grid)
+{
+  let tempGrid = []
+  let testGrid = tempGrid.concat(grid)
+
+  shiftUp(testGrid)
+  combineColumn(testGrid)
+  shiftUp(testGrid)
+
+  for (let i = 0; i < 15; i++)
+  {
+    if (grid[i] != testGrid[i])
+    {
+      return false
+    }
+  }
+
+  return true
+}
+
+function checkDown(grid)
+{
+  let tempGrid = []
+  let testGrid = tempGrid.concat(grid)
+
+  shiftDown(testGrid)
+  combineColumn(testGrid)
+  shiftDown(testGrid)
+
+  for (let i = 0; i < 15; i++)
+  {
+    if (grid[i] != testGrid[i])
+    {
+      return false
+    }
+  }
+
+  return true
+}
