@@ -160,29 +160,18 @@
       }
     }
 
-    function stopPlaying(conn, win) {
-      conn = false;
-
-      if (!win) {
-        document.getElementById("connection").innerHTML =
-          "You lost! Better luck next time!";
-      } else {
-        ("You won! Congrats");
-      }
-    }
-
     let oneGrid = getGrid();
     let twoGrid = oneDimtoTwoDim(oneGrid);
     let connected = false;
     let id = 0;
+    let lost = false;
 
     const socket = io("http://localhost:8080");
 
-    socket.on("hello", () => {
-      document.getElementById("connection").innerHTML = `Connection:good`;
-
+    socket.on("hello", ({ room }) => {
       console.log("Got a message");
-      socket.emit("receive", { id, board: twoGrid });
+
+      document.getElementById("connection").innerHTML = `Connection: ${room}`;
     });
 
     socket.on("give_id", ({ num }) => {
@@ -197,31 +186,8 @@
       }
     });
 
-    socket.on("winner", (args) => {
-      if (id === args.winner) {
-        document.getElementById("connection").innerHTML = "You won! Congrats";
-      } else {
-        document.getElementById("connection").innerHTML =
-          "You lost! Better luck next time!";
-      }
-    });
-
     document.getElementById("start").addEventListener("click", (event) => {
-      event.preventDefault();
-
       connected = true;
-      twoGrid.map((item) => [0, 0, 0, 0]);
-
-      updateEnemy(
-        Array(4)
-          .fill(0)
-          .map((item) => Array(4).fill(0))
-      );
-      updatePage(twoGrid);
-
-      placeNum(twoGrid);
-      placeNum(twoGrid);
-
       socket.emit("waiting");
     });
 
@@ -230,15 +196,17 @@
         return;
       }
 
+      // if (!connected) {
+      //   return;
+      // }
+
       let checkedMove;
 
       if (event.keyCode === 37) {
         oneGrid = getGrid();
         twoGrid = oneDimtoTwoDim(oneGrid);
-
         if (!board.movesLeft(twoGrid)) {
-          socket.emit("gameover", { id: id ? 0 : id });
-          stopPlaying(connected, false);
+          console.log("No moves are left");
         }
 
         checkedMove = board.checkLeft(oneGrid);
@@ -322,6 +290,12 @@
 
     window.addEventListener("load", (event) => {
       event.preventDefault();
+
+      placeNum(twoGrid);
+      placeNum(twoGrid);
+
+      oneGrid = getGrid();
+      twoGrid = oneDimtoTwoDim(oneGrid);
     });
   </script>
 </html>
