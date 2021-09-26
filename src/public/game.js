@@ -150,11 +150,11 @@ function checkRight(grid)
   {
     if (grid[i] != testGrid[i])
     {
-      return false
+      return true
     }
   }
 
-  return true
+  return false
 }
 
 function checkLeft(grid)
@@ -170,11 +170,11 @@ function checkLeft(grid)
   {
     if (grid[i] != testGrid[i])
     {
-      return false
+      return true
     }
   }
 
-  return true
+  return false
 }
 
 function checkUp(grid)
@@ -190,11 +190,11 @@ function checkUp(grid)
   {
     if (grid[i] != testGrid[i])
     {
-      return false
+      return true
     }
   }
 
-  return true
+  return false
 }
 
 function checkDown(grid)
@@ -210,9 +210,9 @@ function checkDown(grid)
   {
     if (grid[i] != testGrid[i])
     {
-      return false
+      return true
     }
   }
 
-  return true
+  return false
 }
