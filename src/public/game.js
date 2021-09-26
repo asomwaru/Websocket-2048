@@ -126,8 +126,38 @@ export function combineColumn(grid, direction) {
 //Checks if moves are still available
 export function movesLeft(grid) {
 
-  let currentSet = new Set();
+  let currentHoriSet = new Set();
+  let currentVertSet = new Set();
 
+  for (let i = 0; i < 4; i++)
+  {
+    for (let j = 0; j < 4; j++)
+    {
+      currentHoriSet.add(grid[i][j]);
+      currentVertSet.add(grid[j][i]);
+    }
+    if (currentHoriSet.length < 4)
+    {
+      return true;
+    }
+    if (currentVertSet.length < 4)
+    {
+      return true;
+    }
+    for(let j = 0; j < 3; j++)
+    {
+      if (grid[i][j] == grid[i][j + 1])
+      {
+        return true;
+      }
+      if (grid[j][i] == grid[j + 1][i])
+      {
+        return true;
+      }
+    }
+  }
+
+  /*
   for (let i = 0; i < 4; i++)
   {
     for (let j = 0; j < 4; j++)
@@ -153,6 +183,7 @@ export function movesLeft(grid) {
       }
     }
   }
+  */
 
   return false;
 
