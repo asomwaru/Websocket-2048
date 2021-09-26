@@ -136,12 +136,12 @@ export function checkRight(grid) {
   let testGrid = tempGrid.concat(grid);
 
   shiftRight(testGrid);
-  combineRow(testGrid);
+  combineRow(testGrid, 2);
   shiftRight(testGrid);
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 16; i++) {
     if (grid[i] != testGrid[i]) {
-      return true;
+      return testGrid;
     }
   }
 
@@ -153,12 +153,12 @@ export function checkLeft(grid) {
   let testGrid = tempGrid.concat(grid);
 
   shiftLeft(testGrid);
-  combineRow(testGrid);
+  combineRow(testGrid, 1);
   shiftLeft(testGrid);
 
-  for (let i = 0; i < 15; i++) {
-    if (grid[i] != testGrid[i]) {
-      return true;
+  for (let i = 0; i < 16; i++) {
+    if (grid[i] !== testGrid[i]) {
+      return testGrid;
     }
   }
 
@@ -170,12 +170,12 @@ export function checkUp(grid) {
   let testGrid = tempGrid.concat(grid);
 
   shiftUp(testGrid);
-  combineColumn(testGrid);
+  combineColumn(testGrid, 1);
   shiftUp(testGrid);
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 16; i++) {
     if (grid[i] != testGrid[i]) {
-      return true;
+      return testGrid;
     }
   }
 
@@ -187,12 +187,12 @@ export function checkDown(grid) {
   let testGrid = tempGrid.concat(grid);
 
   shiftDown(testGrid);
-  combineColumn(testGrid);
+  combineColumn(testGrid, 2);
   shiftDown(testGrid);
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 16; i++) {
     if (grid[i] != testGrid[i]) {
-      return true;
+      return testGrid;
     }
   }
 
