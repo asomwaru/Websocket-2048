@@ -126,11 +126,11 @@ export function checkRight(grid) {
 
   for (let i = 0; i < 15; i++) {
     if (grid[i] != testGrid[i]) {
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
 
 export function checkLeft(grid) {
@@ -143,11 +143,11 @@ export function checkLeft(grid) {
 
   for (let i = 0; i < 15; i++) {
     if (grid[i] != testGrid[i]) {
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
 
 export function checkUp(grid) {
@@ -160,11 +160,11 @@ export function checkUp(grid) {
 
   for (let i = 0; i < 15; i++) {
     if (grid[i] != testGrid[i]) {
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
 
 export function checkDown(grid) {
@@ -177,9 +177,9 @@ export function checkDown(grid) {
 
   for (let i = 0; i < 15; i++) {
     if (grid[i] != testGrid[i]) {
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
