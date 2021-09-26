@@ -132,6 +132,11 @@
 
       if (event.keyCode === 37) {
         oneGrid = getGrid();
+        twoGrid = oneDimtoTwoDim(oneGrid);
+        if (!board.movesLeft(twoGrid))
+        {
+          console.log("No moves are left");
+        }
         checkedMove = board.checkLeft(oneGrid);
 
         if (checkedMove) {

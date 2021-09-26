@@ -125,10 +125,37 @@ export function combineColumn(grid, direction) {
 
 //Checks if moves are still available
 export function movesLeft(grid) {
-  if (checkRight(grid) || checkLeft(grid) || checkUp(grid) || checkDown(grid)) {
-    return true;
+
+  let currentSet = new Set();
+
+  for (let i = 0; i < 4; i++)
+  {
+    for (let j = 0; j < 4; j++)
+    {
+      if (grid[i][j] == 0)
+      {
+        return true;
+      }
+    }
   }
+
+  for (let i = 0; i < 4; i++)
+  {
+    for (let j = 0; j < 3; j++)
+    {
+      if (grid[i][j] == grid[i][j + 1])
+      {
+        return true;
+      }
+      if (grid[j][i] == grid[j + 1][i])
+      {
+        return true;
+      }
+    }
+  }
+
   return false;
+
 }
 
 export function checkRight(grid) {
