@@ -4,6 +4,11 @@ import { Server } from "http";
 import { config } from "dotenv";
 import { Server as ioserver } from "socket.io";
 
+interface receiveUpdate {
+  id: number;
+  board: number[][];
+}
+
 config();
 
 const port: number = parseInt(`${process.env.PORT}`) | 8080;
@@ -18,7 +23,9 @@ app.get("/", (_, res) => {
   res.sendFile(root + "/index.html");
 });
 
-io.sockets.on("connection", (socket) => {
+io.on("connection", (socket) => {
+  let room = "room";
+
   socket.on("waiting", async () => {
     socket.join("waiting");
 
@@ -35,21 +42,27 @@ io.sockets.on("connection", (socket) => {
         throw Error("bad opponent socket");
       }
 
-      opponent.join("room");
-      socket.join("room");
+      opponent.join(room);
+      socket.join(room);
 
       opponent.leave("waiting");
       socket.leave("waiting");
 
       // generate a room id
 
-      io.in("room").emit("hello", "world");
-      io.to(oppClient).emit("ping");
+      io.in("room").emit("hello");
+
+      console.log("Send id to opponent");
+      io.to(oppClient).emit("give_id", { num: 1 });
     }
   });
 
   socket.on("joined", () => {
     console.log("Someone has joined");
+  });
+
+  socket.on("receive", async (args: receiveUpdate) => {
+    socket.broadcast.to(room).emit("update", { opponent: args.board, ...args });
   });
 });
 
